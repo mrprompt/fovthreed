@@ -6,5 +6,14 @@ The script produces output in the KML-format, which is an XML-based language for
 
 ![FOV3D](src/public/fov3d.jpg)
 
+## Start
+
+```console
+docker-compose build
+docker-compose up
+```
+
+Access application at `http://localhost:8081`
+
 ## Original code
 FOV3D was written by Geert Barentsen, the source code was downloaded from this [ESA website](https://www.cosmos.esa.int/web/meteor/fov3d).

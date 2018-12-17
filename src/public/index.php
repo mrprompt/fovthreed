@@ -15,15 +15,15 @@ function check2bool($check)
 // If the form was submitted, run DS3D
 if (isset($_POST["submit"])) {
     require_once("FOV3D.class.php");
-
     
     if (isset($_POST["csv"])) {
         $ges = new GoogleEarthStation(trim($_POST["fov_altitude"]), $_POST["horizontal_cut"]);
-        
         $csv = str_replace(array("\r\n", "\n\r", "\r"), "\n", $_POST["csv"]);
         $line_array = explode("\n", $csv);
-        foreach ($line_array as $line) {
-            $input = explode(",", $line);
+		
+		foreach ($line_array as $line) {
+			$input = explode(",", $line);
+			
             if (count($input) > 5) {
                 $name = trim($input[0]);
                 $color = trim($input[1]);
@@ -36,6 +36,7 @@ if (isset($_POST["submit"])) {
             }
         }
     } else {
+		/*
         if ($_POST["name"] == ""
             or $_POST["opacity"] == ""
             or $_POST["color"] == ""
@@ -50,20 +51,42 @@ if (isset($_POST["submit"])) {
             echo "ERROR: You must provide a value for all fields.";
             exit;
         }
-        
-        
-        $name = trim($_POST["name"]);
-        $color = trim($_POST["opacity"]).trim($_POST["color"]);
-        $latitude = trim($_POST["latitude"]);
-        $longitude = trim($_POST["longitude"]);
-        $altitude = trim($_POST["altitude"]);
-        $azim = trim($_POST["azimuth"]);
-        $elev = trim($_POST["elevation"]);
-        $height = trim($_POST["height"]);
-        $width = trim($_POST["width"]);
+        */
+		
+        if (!isset($_FILES['plateparFile'])) {
+            $name = trim($_POST["name"]);
+            $color = trim($_POST["opacity"]).trim($_POST["color"]);
+            $latitude = trim($_POST["latitude"]);
+            $longitude = trim($_POST["longitude"]);
+            $altitude = trim($_POST["altitude"]);
+            $azim = trim($_POST["azimuth"]);
+            $elev = trim($_POST["elevation"]);
+            $height = trim($_POST["height"]);
+			$width = trim($_POST["width"]);
+			$fov_altitude = trim($_POST["fov_altitude"]);
+			$horizontal_cut = $_POST["horizontal_cut"];
+		}
+		
+		if (isset($_FILES['plateparFile'])) {
+			$platepar_raw = file_get_contents($_FILES['plateparFile']['tmp_name']);
+			$platepar_json = json_decode($platepar_raw, true);
+
+            $name = $platepar_json['station_code'];
+            $color = trim($_POST["opacity"]) . trim($_POST["color"]);
+            $latitude = $platepar_json['lat'];
+            $longitude = $platepar_json['lon'];
+            $altitude = $platepar_json['alt_centre'];
+            $azim = $platepar_json['az_centre'];
+            $elev = $platepar_json['elev'];
+            $height = $platepar_json['Y_res'];
+			$width = $platepar_json['X_res'];
+			$fov_altitude = $platepar_json['fov_h'];
+			$horizontal_cut = $_POST["horizontal_cut"];
+        }
         
         // The order of the corners is very important (should always be clockwise!!)
-        $corners = array();
+		$corners = array();
+		
         if ($elev + ($height/2.0) > 90) {
             $corners[] = $azim - ($width/2.0);
             $corners[] = $elev + ($height/2.0);
@@ -84,7 +107,7 @@ if (isset($_POST["submit"])) {
             $corners[] = $elev - ($height/2.0);
         }
                 
-        $ges = new GoogleEarthStation(trim($_POST["fov_altitude"]), $_POST["horizontal_cut"]);
+        $ges = new GoogleEarthStation($fov_latitude, $horizontal_cut);
         $ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
     }
     
@@ -167,60 +190,172 @@ if (isset($_GET["getsource"])) {
 				<td>
 					<form action='<?php echo $script_uri; ?>' method='post'>
 						<table style='border: 1px solid #bbbbbb; padding:0.5em; width:17em;'>
-							<tr><td colspan='2'><b>Camera details</b></td></tr>
-							<tr><td>Name:</td><td><input type='text' name='name' value='MyCamera' style='width:9em;' /></td></tr>
-							<tr><td>Latitude:</td><td><input type='text' name='latitude' style='width:9em;' />&nbsp;&deg;&nbsp;[-90,&nbsp;90]</td></tr>
-							<tr><td>Longitude:</td><td><input type='text' name='longitude' style='width:9em;' />&nbsp;&deg;&nbsp;[-180,&nbsp;180]</td></tr>
-							<tr><td>Altitude:</td><td><input type='text' name='altitude' style='width:9em;' /> m</td></tr>
-							
-							<tr><td colspan='2'><br/><b>Field of view (rectangle)</b></td></tr>
-							<tr><td>Azimuth:</td><td><input type='text' name='azimuth' style='width:9em;' />&nbsp;&deg;&nbsp;[0,&nbsp;360]</td></tr>
-							<tr><td>Elevation:</td><td><input type='text' name='elevation' style='width:9em;' />&nbsp;&deg;&nbsp;[0,&nbsp;90]</td></tr>
-							<tr><td>Width:</td><td><input type='text' name='width' style='width:9em;' />&nbsp;&deg;&nbsp;[0,&nbsp;90]</td></tr>
-							<tr><td>Height:</td><td><input type='text' name='height' style='width:9em;' />&nbsp;&deg;&nbsp;[0,&nbsp;180]</td></tr>
-							<tr><td>Range/Alt.:</td><td><input type='text' name='fov_altitude' style='width:9em;' value='120' /> km</td></tr>
-							<tr><td> </td><td><input type='checkbox' name='horizontal_cut' checked='checked' style='vertical-align:middle; margin-left:0em;' /> Fixed upper altitude</td></tr>
-				
-							<tr><td colspan='2'><br/><b>Display settings</b></td></tr>
 							<tr>
-							<td>Color:</td>
-							<td>
-								<select name='color' style='width:9em;'>
-									<option value='0000FF'>Red</option>
-									<option value='FFFF00'>Cyan</option>
-									<option value='FF0000'>Blue</option>
-									<option value='0A0000'>DarkBlue</option>
-									<option value='6E8DDA'>LightBlue</option>
-									<option value='080008'>Purple</option>
-									<option value='00FFFF'>Yellow</option>
-									<option value='00FF00'>Lime</option>
-									<option value='FF00FF'>Magenta</option>
-									<option value='FFFFFF'>White</option>
-									<option value='0C0C0C'>Silver</option>
-									<option value='080808'>Gray</option>
-									<option value='000000'>Black</option>
-									<option value='005AFF'>Orange</option>
-									<option value='A2A25A'>Brown</option>
-									<option value='000008'>Maroon</option>
-									<option value='000800'>Green</option>
-									<option value='000808'>Olive</option>
-								</select>
-							</td></tr>
-							<tr><td>Opacity:</td><td><select name='opacity' style='width:9em;'>
-								<option value='00'>0%</option>
-								<option value='40'>25%</option>
-								<option value='80'>50%</option>
-								<option value='c0' selected='selected'>75%</option>
-								<option value='ff'>100%</option>
-							</select></td></tr>
+								<td colspan='2'>
+									<b>Camera details</b>
+								</td>
+							</tr>
+							<tr>
+								<td>Name:</td>
+								<td><input type='text' name='name' value='MyCamera' style='width:9em;' required /></td>
+							</tr>
+							<tr>
+								<td>Latitude:</td>
+								<td><input type='text' name='latitude' style='width:9em;' required />&nbsp;&deg;&nbsp;[-90,&nbsp;90]</td>
+							</tr>
+							<tr>
+								<td>Longitude:</td>
+								<td><input type='text' name='longitude' style='width:9em;' required />&nbsp;&deg;&nbsp;[-180,&nbsp;180]</td>
+							</tr>
+							<tr>
+								<td>Altitude:</td>
+								<td><input type='text' name='altitude' style='width:9em;' required /> m</td>
+							</tr>
 							
-							<tr><td colspan='2'><br /><input type='submit' name='submit' value='Download KML file' style='width:17.5em;' /></td></tr>
+							<tr>
+								<td colspan='2'><br/><b>Field of view (rectangle)</b></td>
+							</tr>
+							<tr>
+								<td>Azimuth:</td>
+								<td><input type='text' name='azimuth' style='width:9em;' required />&nbsp;&deg;&nbsp;[0,&nbsp;360]</td>
+							</tr>
+							<tr>
+								<td>Elevation:</td>
+								<td><input type='text' name='elevation' style='width:9em;' required />&nbsp;&deg;&nbsp;[0,&nbsp;90]</td>
+							</tr>
+							<tr>
+								<td>Width:</td>
+								<td><input type='text' name='width' style='width:9em;' required />&nbsp;&deg;&nbsp;[0,&nbsp;90]</td>
+							</tr>
+							<tr>
+								<td>Height:</td>
+								<td><input type='text' name='height' style='width:9em;' required />&nbsp;&deg;&nbsp;[0,&nbsp;180]</td>
+							</tr>
+							<tr>
+								<td>Range/Alt.:</td>
+								<td><input type='text' name='fov_altitude' style='width:9em;' value='120' required /> km</td>
+							</tr>
+							<tr>
+								<td> </td>
+								<td><input type='checkbox' name='horizontal_cut' checked='checked' style='vertical-align:middle; margin-left:0em;' /> Fixed upper altitude</td>
+							</tr>
+				
+							<tr>
+								<td colspan='2'><br/><b>Display settings</b></td>
+							</tr>
+							<tr>
+								<td>Color:</td>
+								<td>
+									<select name='color' style='width:9em;'  required>
+										<option value='0000FF'>Red</option>
+										<option value='FFFF00'>Cyan</option>
+										<option value='FF0000'>Blue</option>
+										<option value='0A0000'>DarkBlue</option>
+										<option value='6E8DDA'>LightBlue</option>
+										<option value='080008'>Purple</option>
+										<option value='00FFFF'>Yellow</option>
+										<option value='00FF00'>Lime</option>
+										<option value='FF00FF'>Magenta</option>
+										<option value='FFFFFF'>White</option>
+										<option value='0C0C0C'>Silver</option>
+										<option value='080808'>Gray</option>
+										<option value='000000'>Black</option>
+										<option value='005AFF'>Orange</option>
+										<option value='A2A25A'>Brown</option>
+										<option value='000008'>Maroon</option>
+										<option value='000800'>Green</option>
+										<option value='000808'>Olive</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Opacity:</td>
+								<td>
+									<select name='opacity' style='width:9em;'  required>
+										<option value='00'>0%</option>
+										<option value='40'>25%</option>
+										<option value='80'>50%</option>
+										<option value='c0' selected='selected'>75%</option>
+										<option value='ff'>100%</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td colspan='2'>
+									<br />
+									<input type='submit' name='submit' value='Download KML file' style='width:17.5em;' />
+								</td>
+							</tr>
 						</table>
 					</form>
-
 				</td>
 				<td style='vertical-align:top; padding-left:2em;'>
-					Notes:
+					<div class="row">
+						<b>Send platepar file</b> <br>
+
+						<form action="<?php echo $script_uri; ?>" class="form" method="post" enctype="multipart/form-data">
+							<table class="table">
+								<tr>
+									<td> </td>
+									<td><input type='checkbox' name='horizontal_cut' checked='checked' style='vertical-align:middle; margin-left:0em;' /> Fixed upper altitude</td>
+								</tr>
+								<tr>
+									<td colspan='2'><br/><b>Display settings</b></td>
+								</tr>
+								<tr>
+									<td>Color:</td>
+									<td>
+										<select name='color' style='width:9em;'  required>
+											<option value='0000FF'>Red</option>
+											<option value='FFFF00'>Cyan</option>
+											<option value='FF0000'>Blue</option>
+											<option value='0A0000'>DarkBlue</option>
+											<option value='6E8DDA'>LightBlue</option>
+											<option value='080008'>Purple</option>
+											<option value='00FFFF'>Yellow</option>
+											<option value='00FF00'>Lime</option>
+											<option value='FF00FF'>Magenta</option>
+											<option value='FFFFFF'>White</option>
+											<option value='0C0C0C'>Silver</option>
+											<option value='080808'>Gray</option>
+											<option value='000000'>Black</option>
+											<option value='005AFF'>Orange</option>
+											<option value='A2A25A'>Brown</option>
+											<option value='000008'>Maroon</option>
+											<option value='000800'>Green</option>
+											<option value='000808'>Olive</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>Opacity:</td>
+									<td>
+										<select name='opacity' style='width:9em;'  required>
+											<option value='00'>0%</option>
+											<option value='40'>25%</option>
+											<option value='80'>50%</option>
+											<option value='c0' selected='selected'>75%</option>
+											<option value='ff'>100%</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td>Platepar:</td>
+									<td><input type="file" name="plateparFile" id="plateparFile"></td>
+								</tr>
+								<tr>
+									<td colspan='2'>
+										<br />
+										<input type="submit" value="Upload Image" name="submit">
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+
+					<br><br>
+
+					<b>Notes:</b>
 					<ul>
 					<li>The script will generate a KML-file that should be opened locally on your computer using Google Earth.</li>
 					<li>All angles should be entered in decimal degrees.</li>
