@@ -1,0 +1,43 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: "3.1"
+services:
+
+    memcached:
+      image: memcached:alpine
+      container_name: fovthreed-memcached
+
+    redis:
+      image: redis:alpine
+      container_name: fovthreed-redis
+
+    postgres:
+      image: postgres:9.6-alpine
+      container_name: fovthreed-postgres
+      working_dir: /application
+      volumes:
+        - ./src:/application
+      environment:
+        - POSTGRES_USER=fovthreed
+        - POSTGRES_PASSWORD=fovthreed
+        - POSTGRES_DB=fovthreed
+
+    webserver:
+      image: nginx:alpine
+      container_name: fovthreed-webserver
+      working_dir: /application
+      volumes:
+          - ./src:/application
+          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "8081:80"
+
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: fovthreed-php-fpm
+      working_dir: /application
+      volumes:
+        - ./src:/application
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php5/fpm/conf.d/99-overrides.ini
+
