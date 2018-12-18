@@ -1,134 +1,73 @@
 <?php
+require_once("FOV3D.class.php");
+
 $script_uri = "index.php";
-
-
-// Converts the value of a checkbox to a PHP boolean
-function check2bool($check)
-{
-    if ($check == "on") {
-        return true;
-    }
-    return false;
-}
-
 
 // If the form was submitted, run DS3D
 if (isset($_POST["submit"])) {
-    require_once("FOV3D.class.php");
-    
-    if (isset($_POST["csv"])) {
-        $ges = new GoogleEarthStation(trim($_POST["fov_altitude"]), $_POST["horizontal_cut"]);
-        $csv = str_replace(array("\r\n", "\n\r", "\r"), "\n", $_POST["csv"]);
-        $line_array = explode("\n", $csv);
-		
-		foreach ($line_array as $line) {
-			$input = explode(",", $line);
-			
-            if (count($input) > 5) {
-                $name = trim($input[0]);
-                $color = trim($input[1]);
-                $latitude = trim($input[2]);
-                $longitude = trim($input[3]);
-                $height = trim($input[4]);
-                $corners = array_slice($input, 5);
-    
-                $ges->addPlacemark($name, $latitude, $longitude, $height, $corners, $color);
-            }
-        }
-    } else {
-		/*
-        if ($_POST["name"] == ""
-            or $_POST["opacity"] == ""
-            or $_POST["color"] == ""
-            or $_POST["latitude"] == ""
-            or $_POST["longitude"] == ""
-            or $_POST["altitude"] == ""
-            or $_POST["azimuth"] == ""
-            or $_POST["elevation"] == ""
-            or $_POST["height"] == ""
-            or $_POST["width"] == ""
-            or $_POST["fov_altitude"] == "") {
-            echo "ERROR: You must provide a value for all fields.";
-            exit;
-        }
-        */
-		
-        if (!isset($_FILES['plateparFile'])) {
-            $name = trim($_POST["name"]);
-            $color = trim($_POST["opacity"]).trim($_POST["color"]);
-            $latitude = trim($_POST["latitude"]);
-            $longitude = trim($_POST["longitude"]);
-            $altitude = trim($_POST["altitude"]);
-            $azim = trim($_POST["azimuth"]);
-            $elev = trim($_POST["elevation"]);
-            $height = trim($_POST["height"]);
-			$width = trim($_POST["width"]);
-			$fov_altitude = trim($_POST["fov_altitude"]);
-			$horizontal_cut = $_POST["horizontal_cut"];
-		}
-		
-		if (isset($_FILES['plateparFile'])) {
-			$platepar_raw = file_get_contents($_FILES['plateparFile']['tmp_name']);
-			$platepar_json = json_decode($platepar_raw, true);
+	if (!isset($_FILES['plateparFile'])) {
+		$name = trim($_POST["name"]);
+		$color = trim($_POST["opacity"]).trim($_POST["color"]);
+		$latitude = trim($_POST["latitude"]);
+		$longitude = trim($_POST["longitude"]);
+		$altitude = trim($_POST["altitude"]);
+		$azim = trim($_POST["azimuth"]);
+		$elev = trim($_POST["elevation"]);
+		$height = trim($_POST["height"]);
+		$width = trim($_POST["width"]);
+		$fov_altitude = trim($_POST["fov_altitude"]);
+		$horizontal_cut = $_POST["horizontal_cut"];
+	}
+	
+	if (isset($_FILES['platepar_file']) && file_exists($_FILES['platepar_file']['tmp_name'])) {
+		$platepar_raw = file_get_contents($_FILES['platepar_file']['tmp_name']);
+		$platepar_json = json_decode($platepar_raw, true);
 
-            $name = $platepar_json['station_code'];
-            $color = trim($_POST["opacity"]) . trim($_POST["color"]);
-            $latitude = $platepar_json['lat'];
-            $longitude = $platepar_json['lon'];
-            $altitude = $platepar_json['alt_centre'];
-            $azim = $platepar_json['az_centre'];
-            $elev = $platepar_json['elev'];
-            $height = $platepar_json['Y_res'];
-			$width = $platepar_json['X_res'];
-			$fov_altitude = $platepar_json['fov_h'];
-			$horizontal_cut = $_POST["horizontal_cut"];
-        }
-        
-        // The order of the corners is very important (should always be clockwise!!)
-		$corners = array();
-		
-        if ($elev + ($height/2.0) > 90) {
-            $corners[] = $azim - ($width/2.0);
-            $corners[] = $elev + ($height/2.0);
-            $corners[] = $azim + ($width/2.0);
-            $corners[] = $elev + ($height/2.0);
-            $corners[] = $azim - ($width/2.0);
-            $corners[] = $elev - ($height/2.0);
-            $corners[] = $azim + ($width/2.0);
-            $corners[] = $elev - ($height/2.0);
-        } else {
-            $corners[] = $azim - ($width/2.0);
-            $corners[] = $elev + ($height/2.0);
-            $corners[] = $azim + ($width/2.0);
-            $corners[] = $elev + ($height/2.0);
-            $corners[] = $azim + ($width/2.0);
-            $corners[] = $elev - ($height/2.0);
-            $corners[] = $azim - ($width/2.0);
-            $corners[] = $elev - ($height/2.0);
-        }
-                
-        $ges = new GoogleEarthStation($fov_latitude, $horizontal_cut);
-        $ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
-    }
-    
+		$name = $platepar_json['station_code'];
+		$color = trim($_POST["opacity"]) . trim($_POST["color"]);
+		$latitude = $platepar_json['lat'];
+		$longitude = $platepar_json['lon'];
+		$altitude = $platepar_json['elev'];
+		$azim = $platepar_json['az_centre'];
+		$elev = $platepar_json['alt_centre'];
+		$height = $platepar_json['fov_v'];
+		$width = $platepar_json['fov_h'];
+		$fov_altitude = trim($_POST["fov_altitude"]);
+		$horizontal_cut = $_POST["horizontal_cut"];
+	}
+	
+	// The order of the corners is very important (should always be clockwise!!)
+	$corners = array();
+	
+	if ($elev + ($height/2.0) > 90) {
+		$corners[] = $azim - ($width/2.0);
+		$corners[] = $elev + ($height/2.0);
+		$corners[] = $azim + ($width/2.0);
+		$corners[] = $elev + ($height/2.0);
+		$corners[] = $azim - ($width/2.0);
+		$corners[] = $elev - ($height/2.0);
+		$corners[] = $azim + ($width/2.0);
+		$corners[] = $elev - ($height/2.0);
+	} else {
+		$corners[] = $azim - ($width/2.0);
+		$corners[] = $elev + ($height/2.0);
+		$corners[] = $azim + ($width/2.0);
+		$corners[] = $elev + ($height/2.0);
+		$corners[] = $azim + ($width/2.0);
+		$corners[] = $elev - ($height/2.0);
+		$corners[] = $azim - ($width/2.0);
+		$corners[] = $elev - ($height/2.0);
+	}
+
+	$ges = new GoogleEarthStation($fov_altitude, $horizontal_cut, $name);
+	$ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
     
     // Let the browser know that this is a special application file (KML)
     header('Content-Type: application/vnd.google-earth.kml+xml');
-    header('Content-Disposition: attachment; filename="fov3d.kml"');
+    header('Content-Disposition: attachment; filename="' . $name . '.kml"');
     echo $ges->getKml();
     exit();
 }
-
-if (isset($_GET["getsource"])) {
-    $file = "FOV3D.class.php";
-    
-    header('Content-Type: plain/text');
-    header('Content-Disposition: attachment; filename="'.$file.'"');
-    $contents = file($file);
-    echo implode($contents);
-    exit();
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -335,6 +274,11 @@ if (isset($_GET["getsource"])) {
 							</select>
 						</div>
 					</fieldset>
+
+					<div class="form-group">
+							<label for="fov_altitude">Range/Alt. [km]:</label>
+							<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+						</div>
 
 					<div class="form-group">
 						<label for="horizontal_cut">Fixed upper altitude</label>
