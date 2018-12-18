@@ -197,16 +197,16 @@ if (isset($_GET["getsource"])) {
 							<input type='text' name='name' placeholder='My Camera' class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="latitude">Latitude:</label>
-							<input type='text' name='latitude' class="form-control" required>&nbsp;&deg;&nbsp;[-90,&nbsp;90]
+							<label for="latitude">Latitude [-180, 180]:</label>
+							<input type='text' name='latitude' placeholder="-27.59" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="longitude">Longitude:</label>
-							<input type='text' name='longitude' class="form-control" required>&nbsp;&deg;&nbsp;[-180,&nbsp;180]
+							<label for="longitude">Longitude [-180, 180]:</label>
+							<input type='text' name='longitude' placeholder="-48.58" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label>Altitude:</label>
-							<input type='text' name='altitude' class="form-control" required> m
+							<label>Altitude (meters):</label>
+							<input type='text' name='altitude' placeholder="33" class="form-control" required>
 						</div>
 					</fieldset>
 
@@ -214,24 +214,24 @@ if (isset($_GET["getsource"])) {
 						<legend>Field of view (rectangle)</legend>
 
 						<div class="form-group">
-							<label for="azimuth">Azimuth:</label>
-							<input type='text' name='azimuth' class="form-control" required>&nbsp;&deg;&nbsp;[0,&nbsp;360]
+							<label for="azimuth">Azimuth [0, 360]:</label>
+							<input type='text' name='azimuth' placeholder="0" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="elevation">Elevation:</label>
-							<input type='text' name='elevation' class="form-control" required>&nbsp;&deg;&nbsp;[0,&nbsp;90]
+							<label for="elevation">Elevation [0, 90]:</label>
+							<input type='text' name='elevation' placeholder="0" class="form-control" required> 
 						</div>
 						<div class="form-group">
-							<label for="width">Width:</label>
-							<input type='text' name='width' class="form-control" required>&nbsp;&deg;&nbsp;[0,&nbsp;90]
+							<label for="width">Width [0, 90]:</label>
+							<input type='text' name='width' placeholder="0" class="form-control" required> 
 						</div>
 						<div class="form-group">
-							<label for="height">Height:</label>
-							<input type='text' name='height' class="form-control" required>&nbsp;&deg;&nbsp;[0,&nbsp;180]
+							<label for="height">Height [0, 180]:</label>
+							<input type='text' name='height' placeholder="0" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="fov_altitude">Range/Alt.:</label>
-							<input type='text' name='fov_altitude' class="form-control" value='120' required> km
+							<label for="fov_altitude">Range/Alt. [km]:</label>
+							<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
 						</div>
 						<div class="form-group">
 							<label for="horizontal_cut">Fixed upper altitude</label>	 
@@ -279,7 +279,7 @@ if (isset($_GET["getsource"])) {
 					</fieldset>
 
 					<div class="form-group">	
-						<input type='submit' name='submit' value='Download KML file' style='width:17.5em;'>
+						<input type='submit' name='submit' value='Download KML file' class="btn btn-success">
 					</div>
 				</form>
 			</div>
@@ -295,11 +295,6 @@ if (isset($_GET["getsource"])) {
 					<div class="form-group">
 						<label for="platepar_file">Platepar File</label>
 						<input type='file' name='platepar_file' id="platepar_file" class="form-control">
-					</div>
-
-					<div class="form-group">
-						<label for="horizontal_cut">Fixed upper altitude</label>
-						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
 					</div>
 
 					<fieldset>
@@ -341,8 +336,13 @@ if (isset($_GET["getsource"])) {
 						</div>
 					</fieldset>
 
+					<div class="form-group">
+						<label for="horizontal_cut">Fixed upper altitude</label>
+						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
+					</div>
+
 					<div class="form-group">	
-						<input type='submit' name='submit' value='Upload platepar file'>
+						<input type='submit' name='submit' value='Upload platepar file' class="btn btn-success">
 					</div>
 				</form>
 			</div>
