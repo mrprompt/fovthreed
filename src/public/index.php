@@ -345,36 +345,36 @@ if (isset($_GET["getsource"])) {
 						<input type='submit' name='submit' value='Upload platepar file' class="btn btn-success">
 					</div>
 				</form>
-			</div>
-		</div>
 
-		<div class="row">
-			<div class="col-lg-12">
-				<h4>Notes:</h4>
+				<div class="row">
+					<div class="col-lg-12">
+						<h4>Notes:</h4>
 
-				<ul>
-					<li>The script will generate a KML-file that should be opened locally on your computer using Google Earth.</li>
-					<li>All angles should be entered in decimal degrees.</li>
-					<li>Western longitudes and southern latitudes should be given as negative values.</li>
-					<li>For azimuth, north is 0 degrees and south is 180 degrees.</li>
-					<li>The simple user interface will generate a rectangular field of view. The 4 corners of this rectangle will have the following relative coordinates (azimuth, elevation): 
 						<ul>
-							<li>1: (azimuth - width/2, elevation + height/2);</li>
-							<li>2: (azimuth + width/2, elevation + height/2);</li>
-							<li>3: (azimuth + width/2, elevation - height/2);</li>
-							<li>4: (azimuth - width/2, elevation - height/2).</li>
+							<li>The script will generate a KML-file that should be opened locally on your computer using Google Earth.</li>
+							<li>All angles should be entered in decimal degrees.</li>
+							<li>Western longitudes and southern latitudes should be given as negative values.</li>
+							<li>For azimuth, north is 0 degrees and south is 180 degrees.</li>
+							<li>The simple user interface will generate a rectangular field of view. The 4 corners of this rectangle will have the following relative coordinates (azimuth, elevation): 
+								<ul>
+									<li>1: (azimuth - width/2, elevation + height/2);</li>
+									<li>2: (azimuth + width/2, elevation + height/2);</li>
+									<li>3: (azimuth + width/2, elevation - height/2);</li>
+									<li>4: (azimuth - width/2, elevation - height/2).</li>
+								</ul>
+							</li>
+							<li>The "Range" value is the distance in kilometer from the camera to the end of the field of view. If "Fixed upper altitude" is checked, then the field of view will be drawn up to the given altitude.</li>
 						</ul>
-					</li>
-					<li>The "Range" value is the distance in kilometer from the camera to the end of the field of view. If "Fixed upper altitude" is checked, then the field of view will be drawn up to the given altitude.</li>
-				</ul>
-			</div>
-		</div>
+					</div>
+				</div>
 
-		<div class="row">
-			<div class="col-lg-12">
-				<h3>Source code</h3>
+				<div class="row">
+					<div class="col-lg-12">
+						<h3>Source code</h3>
 
-				FOV3D was written by Geert Barentsen, the source code was downloaded from this <a href="https://www.cosmos.esa.int/web/meteor/fov3d">ESA website</a>.
+						FOV3D was written by Geert Barentsen, the source code was downloaded from this <a href="https://www.cosmos.esa.int/web/meteor/fov3d">ESA website</a>.
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
