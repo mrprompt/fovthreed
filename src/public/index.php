@@ -209,9 +209,9 @@ if (isset($_POST["submit"])) {
 							<label for="opacity">Opacity:</label>
 							<select name='opacity' class="form-control"  required>
 								<option value='00'>0%</option>
-								<option value='40'>25%</option>
+								<option value='40' selected='selected'>25%</option>
 								<option value='80'>50%</option>
-								<option value='c0' selected='selected'>75%</option>
+								<option value='c0'>75%</option>
 								<option value='ff'>100%</option>
 							</select>
 						</div>
@@ -267,9 +267,9 @@ if (isset($_POST["submit"])) {
 							<label for="opacity">Opacity:</label>
 							<select name='opacity' class="form-control"  required>
 								<option value='00'>0%</option>
-								<option value='40'>25%</option>
+								<option value='40' selected='selected'>25%</option>
 								<option value='80'>50%</option>
-								<option value='c0' selected='selected'>75%</option>
+								<option value='c0'>75%</option>
 								<option value='ff'>100%</option>
 							</select>
 						</div>
