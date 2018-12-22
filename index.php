@@ -1,74 +1,3 @@
-<?php
-require_once("FOV3D.class.php");
-
-$script_uri = "index.php";
-
-// If the form was submitted, run DS3D
-if (isset($_POST["submit"])) {
-	if (!isset($_FILES['plateparFile'])) {
-		$name = trim($_POST["name"]);
-		$color = trim($_POST["opacity"]).trim($_POST["color"]);
-		$latitude = trim($_POST["latitude"]);
-		$longitude = trim($_POST["longitude"]);
-		$altitude = trim($_POST["altitude"]);
-		$azim = trim($_POST["azimuth"]);
-		$elev = trim($_POST["elevation"]);
-		$height = trim($_POST["height"]);
-		$width = trim($_POST["width"]);
-		$fov_altitude = trim($_POST["fov_altitude"]);
-		$horizontal_cut = $_POST["horizontal_cut"];
-	}
-	
-	if (isset($_FILES['platepar_file']) && file_exists($_FILES['platepar_file']['tmp_name'])) {
-		$platepar_raw = file_get_contents($_FILES['platepar_file']['tmp_name']);
-		$platepar_json = json_decode($platepar_raw, true);
-
-		$name = $platepar_json['station_code'];
-		$color = trim($_POST["opacity"]) . trim($_POST["color"]);
-		$latitude = $platepar_json['lat'];
-		$longitude = $platepar_json['lon'];
-		$altitude = $platepar_json['elev'];
-		$azim = $platepar_json['az_centre'];
-		$elev = $platepar_json['alt_centre'];
-		$height = $platepar_json['fov_v'];
-		$width = $platepar_json['fov_h'];
-		$fov_altitude = trim($_POST["fov_altitude"]);
-		$horizontal_cut = $_POST["horizontal_cut"];
-	}
-	
-	// The order of the corners is very important (should always be clockwise!!)
-	$corners = array();
-	
-	if ($elev + ($height/2.0) > 90) {
-		$corners[] = $azim - ($width/2.0);
-		$corners[] = $elev + ($height/2.0);
-		$corners[] = $azim + ($width/2.0);
-		$corners[] = $elev + ($height/2.0);
-		$corners[] = $azim - ($width/2.0);
-		$corners[] = $elev - ($height/2.0);
-		$corners[] = $azim + ($width/2.0);
-		$corners[] = $elev - ($height/2.0);
-	} else {
-		$corners[] = $azim - ($width/2.0);
-		$corners[] = $elev + ($height/2.0);
-		$corners[] = $azim + ($width/2.0);
-		$corners[] = $elev + ($height/2.0);
-		$corners[] = $azim + ($width/2.0);
-		$corners[] = $elev - ($height/2.0);
-		$corners[] = $azim - ($width/2.0);
-		$corners[] = $elev - ($height/2.0);
-	}
-
-	$ges = new GoogleEarthStation($fov_altitude, $horizontal_cut, $name);
-	$ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
-    
-    // Let the browser know that this is a special application file (KML)
-    header('Content-Type: application/vnd.google-earth.kml+xml');
-    header('Content-Disposition: attachment; filename="' . $name . '.kml"');
-    echo $ges->getKml();
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,15 +8,7 @@ if (isset($_POST["submit"])) {
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap-grid.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
-	<style>
-		body {
-			background-color: #DEDEDE;
-		}
-
-		body > div.container {
-			background-color: white;
-		}
-	</style>
+	<link rel="stylesheet" href="style.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -96,232 +17,352 @@ if (isset($_POST["submit"])) {
     <![endif]-->
 </head>
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-12">
-				<h2>Field of view visualization using 3D GIS software (FOV3D)</h2>
+	<header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="./">FOV3D</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+		<div class="collapse navbar-collapse" id="navbarCollapse">
+          	<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#home">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#form">Simple Form</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#platepar">Upload Platepar</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#csv">Upload CSV</a>
+				</li>
+			</ul>
+			<ul class="navbar-nav pull-right">
+				<li class="nav-item">
+					<a class="nav-link" href="https://globalmeteornetwork.org/">Go to GMN</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://github.com/mrprompt/fovthreed">Get Source Code</a>
+				</li>
+          </ul>
+        </div>
+      </nav>
+    </header>
 
-				<h3>Introduction</h3>
+	<main role="main" class="container">
+		<div class="row-fluid">
+			<h2>Field of view visualization using 3D GIS software (FOV3D)</h2>
 
-				<p>To get a better understanding of the atmospheric volume that is monitored by a (meteor) camera,
-				one may use 3D GIS-software such as <a href="http://earth.google.com/">Google Earth</a> to interactively explore the field of view of a camera.
-				To do this, we created a PHP-script called "FOV3D". The script generates a 3D semi-transparant polygon representing the field of view of a given camera.</p>
+			<b>Introduction</b>
 
-				<p>The script produces output in the <a href="http://en.wikipedia.org/wiki/Keyhole_Markup_Language">KML-format</a>,
-				which is an XML-based language for describing geospatial data. 
-				KML-files can be imported into GIS-software such as <a href="http://earth.google.com/">Google Earth</a>, <a href="http://worldwind.arc.nasa.gov/">NASA World Wind</a> and <a href="http://www.esri.com/software/arcgis/explorer/index.html">ArcGIS</a>.
-				However, the files generated by this script have only been verified to work with Google Earth.</p>
+			<p>To get a better understanding of the atmospheric volume that is monitored by a (meteor) camera,
+			one may use 3D GIS-software such as <a href="http://earth.google.com/">Google Earth</a> to interactively explore the field of view of a camera.
+			To do this, we created a PHP-script called "FOV3D". The script generates a 3D semi-transparant polygon representing the field of view of a given camera.</p>
 
-				<p class="text-center">
-					<img src='fov3d.jpg' style='margin-top:2em; margin-bottom:1em;'>
-					<br/>
-					<i>Example of a FOV3D-generated file in Google Earth, showing the MRG <a href='http://adsabs.harvard.edu/abs/2010pim7.conf....7K'>double-station setup in the Netherlands</a>.</i>
-				</p>
-			</div>
+			<p>The script produces output in the <a href="http://en.wikipedia.org/wiki/Keyhole_Markup_Language">KML-format</a>,
+			which is an XML-based language for describing geospatial data. 
+			KML-files can be imported into GIS-software such as <a href="http://earth.google.com/">Google Earth</a>, <a href="http://worldwind.arc.nasa.gov/">NASA World Wind</a> and <a href="http://www.esri.com/software/arcgis/explorer/index.html">ArcGIS</a>.
+			However, the files generated by this script have only been verified to work with Google Earth.</p>
+
+			<p class="text-center">
+				<img src='fov3d.jpg' style='margin-top:2em; margin-bottom:1em;'>
+				<br/>
+				<i>Example of a FOV3D-generated file in Google Earth, showing the MRG <a href='http://adsabs.harvard.edu/abs/2010pim7.conf....7K'>double-station setup in the Netherlands</a>.</i>
+			</p>
 		</div>
 
-		<div class="row">
-			<!-- left collumn -->
-			<div class="col-lg-6">
-				<h3>Simple user interface</h3>
+		<hr class="clearfix"/>
 
-				<p>Use the form below to create a Google Earth-file for your camera setup.</p>
+		<div class="row-fluid" id="form">
+			<h3>Simple user interface</h3>
 
-				<form action='<?php echo $script_uri; ?>' method='post'>
-					<fieldset>
-						<legend>Camera details</legend>
+			<p>Use the form below to create a Google Earth-file for your camera setup.</p>
+			
+			<form action='process.php' method='post' role="form" class="form-inline">
+				<fieldset class="col-lg-6">
+					<legend>Camera details</legend>
 
-						<div class="form-group">
-							<label for="name">Name:</label>
-							<input type='text' name='name' placeholder='My Camera' class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="latitude">Latitude [-180, 180]:</label>
-							<input type='text' name='latitude' placeholder="-27.59" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="longitude">Longitude [-180, 180]:</label>
-							<input type='text' name='longitude' placeholder="-48.58" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label>Altitude (meters):</label>
-							<input type='text' name='altitude' placeholder="33" class="form-control" required>
-						</div>
-					</fieldset>
-
-					<fieldset>
-						<legend>Field of view (rectangle)</legend>
-
-						<div class="form-group">
-							<label for="azimuth">Azimuth [0, 360]:</label>
-							<input type='text' name='azimuth' placeholder="0" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="elevation">Elevation [0, 90]:</label>
-							<input type='text' name='elevation' placeholder="0" class="form-control" required> 
-						</div>
-						<div class="form-group">
-							<label for="width">Width [0, 90]:</label>
-							<input type='text' name='width' placeholder="0" class="form-control" required> 
-						</div>
-						<div class="form-group">
-							<label for="height">Height [0, 180]:</label>
-							<input type='text' name='height' placeholder="0" class="form-control" required>
-						</div>
-						<div class="form-group">
-							<label for="fov_altitude">Range/Alt. [km]:</label>
-							<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
-						</div>
-						<div class="form-group">
-							<label for="horizontal_cut">Fixed upper altitude</label>	 
-							<input type='checkbox' name='horizontal_cut' checked='checked'>
-						</div>
-					</fieldset>
-
-					<fieldset>
-						<legend>Display settings</legend>
-								
-						<div class="form-group">
-							<label for="color">Color:</label>
-							<select name='color' class="form-control"  required>
-								<option value='0000FF'>Red</option>
-								<option value='FFFF00'>Cyan</option>
-								<option value='FF0000'>Blue</option>
-								<option value='0A0000'>DarkBlue</option>
-								<option value='6E8DDA'>LightBlue</option>
-								<option value='080008'>Purple</option>
-								<option value='00FFFF'>Yellow</option>
-								<option value='00FF00'>Lime</option>
-								<option value='FF00FF'>Magenta</option>
-								<option value='FFFFFF'>White</option>
-								<option value='0C0C0C'>Silver</option>
-								<option value='080808'>Gray</option>
-								<option value='000000'>Black</option>
-								<option value='005AFF'>Orange</option>
-								<option value='A2A25A'>Brown</option>
-								<option value='000008'>Maroon</option>
-								<option value='000800'>Green</option>
-								<option value='000808'>Olive</option>
-							</select>
-						</div>									
-
-						<div class="form-group">
-							<label for="opacity">Opacity:</label>
-							<select name='opacity' class="form-control"  required>
-								<option value='00'>0%</option>
-								<option value='40' selected='selected'>25%</option>
-								<option value='80'>50%</option>
-								<option value='c0'>75%</option>
-								<option value='ff'>100%</option>
-							</select>
-						</div>
-					</fieldset>
-
-					<div class="form-group">	
-						<input type='submit' name='submit' value='Download KML file' class="btn btn-success">
+					<div class="form-group">
+						<label for="name">Name:</label>
+						<input type='text' name='name' placeholder='My Camera' class="form-control" required>
 					</div>
-				</form>
-			</div>
-			<!-- end of left collumn -->
+					<div class="form-group">
+						<label for="latitude">Latitude [-180, 180]:</label>
+						<input type='text' name='latitude' placeholder="-27.59" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="longitude">Longitude [-180, 180]:</label>
+						<input type='text' name='longitude' placeholder="-48.58" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label>Altitude (meters):</label>
+						<input type='text' name='altitude' placeholder="33" class="form-control" required>
+					</div>
+				</fieldset>
 
-			<!-- right collumn" -->
-			<div class="col-lg-6">
-				<h3>Upload file</h3>
+				<fieldset class="col-lg-6">
+					<legend>Field of view (rectangle)</legend>
 
-				<p>Use the form below to upload your platepar file and generate a Google Earth-file for your camera setup.</p>
+					<div class="form-group">
+						<label for="azimuth">Azimuth [0, 360]:</label>
+						<input type='text' name='azimuth' placeholder="0" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="elevation">Elevation [0, 90]:</label>
+						<input type='text' name='elevation' placeholder="0" class="form-control" required> 
+					</div>
+					<div class="form-group">
+						<label for="width">Width [0, 90]:</label>
+						<input type='text' name='width' placeholder="0" class="form-control" required> 
+					</div>
+					<div class="form-group">
+						<label for="height">Height [0, 180]:</label>
+						<input type='text' name='height' placeholder="0" class="form-control" required>
+					</div>
+					<div class="form-group">
+						<label for="fov_altitude">Range/Alt. [km]:</label>
+						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+					</div>
+					<div class="form-group">
+						<label for="horizontal_cut">Fixed upper altitude</label>	 
+						<input type='checkbox' name='horizontal_cut' checked='checked'>
+					</div>
+				</fieldset>
+				
+				<fieldset class="col-lg-6">
+					<legend>Display settings</legend>
+							
+					<div class="form-group">
+						<label for="color">Color:</label>
+						<select name='color' class="form-control"  required>
+							<option value='0000FF'>Red</option>
+							<option value='FFFF00'>Cyan</option>
+							<option value='FF0000'>Blue</option>
+							<option value='0A0000'>DarkBlue</option>
+							<option value='6E8DDA'>LightBlue</option>
+							<option value='080008'>Purple</option>
+							<option value='00FFFF'>Yellow</option>
+							<option value='00FF00'>Lime</option>
+							<option value='FF00FF'>Magenta</option>
+							<option value='FFFFFF'>White</option>
+							<option value='0C0C0C'>Silver</option>
+							<option value='080808'>Gray</option>
+							<option value='000000'>Black</option>
+							<option value='005AFF'>Orange</option>
+							<option value='A2A25A'>Brown</option>
+							<option value='000008'>Maroon</option>
+							<option value='000800'>Green</option>
+							<option value='000808'>Olive</option>
+						</select>
+					</div>									
 
-				<form action="<?php echo $script_uri; ?>" class="form" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="opacity">Opacity:</label>
+						<select name='opacity' class="form-control"  required>
+							<option value='00'>0%</option>
+							<option value='40' selected='selected'>25%</option>
+							<option value='80'>50%</option>
+							<option value='c0'>75%</option>
+							<option value='ff'>100%</option>
+						</select>
+					</div>
+				</fieldset>
+
+				<div class="form-group col-lg-6">
+					<input type="hidden" name="input_type" value="form"/>
+					<input type='submit' name='submit' value='Send' class="btn btn-success">
+				</div>
+			</form>
+		</div>
+
+		<hr class="clearfix"/>
+
+		<div class="row-fluid" id="platepar">
+			<h3>Upload Platepar</h3>
+
+			<p>Use the form below to upload your platepar file and generate a Google Earth-file for your camera setup.</p>
+			
+			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
+				<fieldset class="col-lg-6">
+					<legend>Display settings</legend>
+							
+					<div class="form-group">
+						<label for="color">Color:</label>
+						<select name='color' class="form-control" required>
+							<option value='0000FF'>Red</option>
+							<option value='FFFF00'>Cyan</option>
+							<option value='FF0000'>Blue</option>
+							<option value='0A0000'>DarkBlue</option>
+							<option value='6E8DDA'>LightBlue</option>
+							<option value='080008'>Purple</option>
+							<option value='00FFFF'>Yellow</option>
+							<option value='00FF00'>Lime</option>
+							<option value='FF00FF'>Magenta</option>
+							<option value='FFFFFF'>White</option>
+							<option value='0C0C0C'>Silver</option>
+							<option value='080808'>Gray</option>
+							<option value='000000'>Black</option>
+							<option value='005AFF'>Orange</option>
+							<option value='A2A25A'>Brown</option>
+							<option value='000008'>Maroon</option>
+							<option value='000800'>Green</option>
+							<option value='000808'>Olive</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="opacity">Opacity:</label>
+						<select name='opacity' class="form-control"  required>
+							<option value='00'>0%</option>
+							<option value='40' selected='selected'>25%</option>
+							<option value='80'>50%</option>
+							<option value='c0'>75%</option>
+							<option value='ff'>100%</option>
+						</select>
+					</div>
+				</fieldset>
+
+				<fieldset class="col-lg-6">
+					<legend>Details</legend>
+
 					<div class="form-group">
 						<label for="platepar_file">Platepar File</label>
 						<input type='file' name='platepar_file' id="platepar_file" class="form-control">
 					</div>
-
-					<fieldset>
-						<legend>Display settings</legend>
-								
-						<div class="form-group">
-							<label for="color">Color:</label>
-							<select name='color' class="form-control" required>
-								<option value='0000FF'>Red</option>
-								<option value='FFFF00'>Cyan</option>
-								<option value='FF0000'>Blue</option>
-								<option value='0A0000'>DarkBlue</option>
-								<option value='6E8DDA'>LightBlue</option>
-								<option value='080008'>Purple</option>
-								<option value='00FFFF'>Yellow</option>
-								<option value='00FF00'>Lime</option>
-								<option value='FF00FF'>Magenta</option>
-								<option value='FFFFFF'>White</option>
-								<option value='0C0C0C'>Silver</option>
-								<option value='080808'>Gray</option>
-								<option value='000000'>Black</option>
-								<option value='005AFF'>Orange</option>
-								<option value='A2A25A'>Brown</option>
-								<option value='000008'>Maroon</option>
-								<option value='000800'>Green</option>
-								<option value='000808'>Olive</option>
-							</select>
-						</div>									
-
-						<div class="form-group">
-							<label for="opacity">Opacity:</label>
-							<select name='opacity' class="form-control"  required>
-								<option value='00'>0%</option>
-								<option value='40' selected='selected'>25%</option>
-								<option value='80'>50%</option>
-								<option value='c0'>75%</option>
-								<option value='ff'>100%</option>
-							</select>
-						</div>
-					</fieldset>
-
+					
 					<div class="form-group">
-							<label for="fov_altitude">Range/Alt. [km]:</label>
-							<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
-						</div>
+						<label for="fov_altitude">Range/Alt. [km]:</label>
+						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+					</div>
 
 					<div class="form-group">
 						<label for="horizontal_cut">Fixed upper altitude</label>
 						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
 					</div>
 
-					<div class="form-group">	
-						<input type='submit' name='submit' value='Upload platepar file' class="btn btn-success">
+					<div class="form-group">
+						<input type="hidden" name="input_type" value="platepar"/>
+						<input type='submit' name='submit' value='Send' class="btn btn-success">
 					</div>
-				</form>
+				</fieldset>
+			</form>
+		</div>
 
-				<div class="row">
-					<div class="col-lg-12">
-						<h4>Notes:</h4>
+		<hr class="clearfix"/>
 
+		<div class="row-fluid" id="csv">
+			<h3>Upload CSV</h3>
+
+			<p>Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.</p>
+			
+			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
+				<fieldset class="col-lg-6">
+					<legend>Display settings</legend>
+							
+					<div class="form-group">
+						<label for="color">Color:</label>
+						<select name='color' class="form-control" required>
+							<option value='0000FF'>Red</option>
+							<option value='FFFF00'>Cyan</option>
+							<option value='FF0000'>Blue</option>
+							<option value='0A0000'>DarkBlue</option>
+							<option value='6E8DDA'>LightBlue</option>
+							<option value='080008'>Purple</option>
+							<option value='00FFFF'>Yellow</option>
+							<option value='00FF00'>Lime</option>
+							<option value='FF00FF'>Magenta</option>
+							<option value='FFFFFF'>White</option>
+							<option value='0C0C0C'>Silver</option>
+							<option value='080808'>Gray</option>
+							<option value='000000'>Black</option>
+							<option value='005AFF'>Orange</option>
+							<option value='A2A25A'>Brown</option>
+							<option value='000008'>Maroon</option>
+							<option value='000800'>Green</option>
+							<option value='000808'>Olive</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="opacity">Opacity:</label>
+						<select name='opacity' class="form-control"  required>
+							<option value='00'>0%</option>
+							<option value='40' selected='selected'>25%</option>
+							<option value='80'>50%</option>
+							<option value='c0'>75%</option>
+							<option value='ff'>100%</option>
+						</select>
+					</div>
+				</fieldset>
+
+				<fieldset class="col-lg-6">
+					<legend>Details</legend>
+
+					<div class="form-group">
+						<label for="csv_file">Platepar File</label>
+						<input type='file' name='csv_file' id="csv_file" class="form-control">
+					</div>
+					
+					<div class="form-group">
+						<label for="fov_altitude">Range/Alt. [km]:</label>
+						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+					</div>
+
+					<div class="form-group">
+						<label for="horizontal_cut">Fixed upper altitude</label>
+						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
+					</div>
+
+					<div class="form-group">
+						<input type="hidden" name="input_type" value="csv"/>
+						<input type='submit' name='submit' value='Send' class="btn btn-success">
+					</div>
+				</fieldset>
+			</form>
+		</div>
+
+		<hr class="clearfix"/>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<h4>Notes:</h4>
+
+				<ul>
+					<li>The script will generate a KML-file that should be opened locally on your computer using Google Earth.</li>
+					<li>All angles should be entered in decimal degrees.</li>
+					<li>Western longitudes and southern latitudes should be given as negative values.</li>
+					<li>For azimuth, north is 0 degrees and south is 180 degrees.</li>
+					<li>The simple user interface will generate a rectangular field of view. The 4 corners of this rectangle will have the following relative coordinates (azimuth, elevation): 
 						<ul>
-							<li>The script will generate a KML-file that should be opened locally on your computer using Google Earth.</li>
-							<li>All angles should be entered in decimal degrees.</li>
-							<li>Western longitudes and southern latitudes should be given as negative values.</li>
-							<li>For azimuth, north is 0 degrees and south is 180 degrees.</li>
-							<li>The simple user interface will generate a rectangular field of view. The 4 corners of this rectangle will have the following relative coordinates (azimuth, elevation): 
-								<ul>
-									<li>1: (azimuth - width/2, elevation + height/2);</li>
-									<li>2: (azimuth + width/2, elevation + height/2);</li>
-									<li>3: (azimuth + width/2, elevation - height/2);</li>
-									<li>4: (azimuth - width/2, elevation - height/2).</li>
-								</ul>
-							</li>
-							<li>The "Range" value is the distance in kilometer from the camera to the end of the field of view. If "Fixed upper altitude" is checked, then the field of view will be drawn up to the given altitude.</li>
+							<li>1: (azimuth - width/2, elevation + height/2);</li>
+							<li>2: (azimuth + width/2, elevation + height/2);</li>
+							<li>3: (azimuth + width/2, elevation - height/2);</li>
+							<li>4: (azimuth - width/2, elevation - height/2).</li>
 						</ul>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-lg-12">
-						<h3>Source code</h3>
-
-						FOV3D was written by Geert Barentsen, the source code was downloaded from this <a href="https://www.cosmos.esa.int/web/meteor/fov3d">ESA website</a>.
-					</div>
-				</div>
+					</li>
+					<li>The "Range" value is the distance in kilometer from the camera to the end of the field of view. If "Fixed upper altitude" is checked, then the field of view will be drawn up to the given altitude.</li>
+				</ul>
 			</div>
 		</div>
-	</div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<h3>Source code</h3>
+
+				FOV3D was written by Geert Barentsen, the source code was downloaded from this <a href="https://www.cosmos.esa.int/web/meteor/fov3d">ESA website</a> 
+				and rewrited to this version by <a href="https://github.com/mrprompt">Thiago Paes</a> to use on <a href="https://globalmeteornetwork.org">GMN</a> website.
+			</div>
+		</div>
+	</main>
+
+    <footer class="footer">
+      <div class="container text-center">
+        <span class="text-muted">Field of view visualization using 3D GIS software (FOV3D) - <?= date('Y') ?></span>
+      </div>
+    </footer>
 	
     <!-- Bootstrap core JavaScript
     ================================================== -->
