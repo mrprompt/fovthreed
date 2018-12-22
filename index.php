@@ -82,24 +82,32 @@
 			<p>Use the form below to create a Google Earth-file for your camera setup.</p>
 			
 			<form action='process.php' method='post' role="form" class="form-inline">
-				<fieldset class="col-lg-6">
+				<fieldset class="col-lg-6 mb-5em">
 					<legend>Camera details</legend>
 
 					<div class="form-group">
-						<label for="name">Name:</label>
-						<input type='text' name='name' placeholder='My Camera' class="form-control" required>
+						<label for="name" class="col-lg-4">Name:</label>
+						<div class="col-lg-8">
+							<input type='text' name='name' placeholder='My Camera' class="form-control" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="latitude">Latitude [-180, 180]:</label>
-						<input type='text' name='latitude' placeholder="-27.59" class="form-control" required>
+						<label for="latitude" class="col-lg-4">Latitude :</label>
+						<div class="col-lg-8">
+							<input type='text' name='latitude' placeholder="[-180, 180]" class="form-control" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="longitude">Longitude [-180, 180]:</label>
-						<input type='text' name='longitude' placeholder="-48.58" class="form-control" required>
+						<label for="longitude" class="col-lg-4">Longitude:</label>
+						<div class="col-lg-8">
+							<input type='text' name='longitude' placeholder="[-180, 180]" class="form-control" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label>Altitude (meters):</label>
-						<input type='text' name='altitude' placeholder="33" class="form-control" required>
+						<label for="altitude" class="col-lg-4">Altitude:</label>
+						<div class="col-lg-8">
+							<input type='text' name='altitude' placeholder="meters" class="form-control" required>
+						</div>
 					</div>
 				</fieldset>
 
@@ -107,71 +115,87 @@
 					<legend>Field of view (rectangle)</legend>
 
 					<div class="form-group">
-						<label for="azimuth">Azimuth [0, 360]:</label>
-						<input type='text' name='azimuth' placeholder="0" class="form-control" required>
+						<label for="azimuth" class="col-lg-4">Azimuth:</label>
+						<div class="col-lg-8">
+							<input type='text' name='azimuth' placeholder="[0, 360]" class="form-control" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="elevation">Elevation [0, 90]:</label>
-						<input type='text' name='elevation' placeholder="0" class="form-control" required> 
+						<label for="elevation" class="col-lg-4">Elevation:</label>
+						<div class="col-lg-8">
+							<input type='text' name='elevation' placeholder="[0, 90]" class="form-control" required> 
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="width">Width [0, 90]:</label>
-						<input type='text' name='width' placeholder="0" class="form-control" required> 
+						<label for="width" class="col-lg-4">Width:</label>
+						<div class="col-lg-8">
+							<input type='text' name='width' placeholder="[0, 90]" class="form-control" required> 
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="height">Height [0, 180]:</label>
-						<input type='text' name='height' placeholder="0" class="form-control" required>
+						<label for="height" class="col-lg-4">Height:</label>
+						<div class="col-lg-8">
+							<input type='text' name='height' placeholder="[0, 180]" class="form-control" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="fov_altitude">Range/Alt. [km]:</label>
-						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
+						<div class="col-lg-8">
+							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
+						</div>
 					</div>
 					<div class="form-group">
-						<label for="horizontal_cut">Fixed upper altitude</label>	 
-						<input type='checkbox' name='horizontal_cut' checked='checked'>
+						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
+						<div class="col-lg-8">	 
+							<input type='checkbox' name='horizontal_cut' checked='checked'>
+						</div>
 					</div>
 				</fieldset>
 				
-				<fieldset class="col-lg-6">
+				<fieldset class="col-lg-12">
 					<legend>Display settings</legend>
 							
 					<div class="form-group">
-						<label for="color">Color:</label>
-						<select name='color' class="form-control"  required>
-							<option value='0000FF'>Red</option>
-							<option value='FFFF00'>Cyan</option>
-							<option value='FF0000'>Blue</option>
-							<option value='0A0000'>DarkBlue</option>
-							<option value='6E8DDA'>LightBlue</option>
-							<option value='080008'>Purple</option>
-							<option value='00FFFF'>Yellow</option>
-							<option value='00FF00'>Lime</option>
-							<option value='FF00FF'>Magenta</option>
-							<option value='FFFFFF'>White</option>
-							<option value='0C0C0C'>Silver</option>
-							<option value='080808'>Gray</option>
-							<option value='000000'>Black</option>
-							<option value='005AFF'>Orange</option>
-							<option value='A2A25A'>Brown</option>
-							<option value='000008'>Maroon</option>
-							<option value='000800'>Green</option>
-							<option value='000808'>Olive</option>
-						</select>
+						<label for="color" class="col-lg-4">Color:</label>
+						<div class="col-lg-8">
+							<select name='color' class="form-control"  required>
+								<option value='0000FF'>Red</option>
+								<option value='FFFF00'>Cyan</option>
+								<option value='FF0000'>Blue</option>
+								<option value='0A0000'>DarkBlue</option>
+								<option value='6E8DDA'>LightBlue</option>
+								<option value='080008'>Purple</option>
+								<option value='00FFFF'>Yellow</option>
+								<option value='00FF00'>Lime</option>
+								<option value='FF00FF'>Magenta</option>
+								<option value='FFFFFF'>White</option>
+								<option value='0C0C0C'>Silver</option>
+								<option value='080808'>Gray</option>
+								<option value='000000'>Black</option>
+								<option value='005AFF'>Orange</option>
+								<option value='A2A25A'>Brown</option>
+								<option value='000008'>Maroon</option>
+								<option value='000800'>Green</option>
+								<option value='000808'>Olive</option>
+							</select>
+						</div>
 					</div>									
 
 					<div class="form-group">
-						<label for="opacity">Opacity:</label>
-						<select name='opacity' class="form-control"  required>
-							<option value='00'>0%</option>
-							<option value='40' selected='selected'>25%</option>
-							<option value='80'>50%</option>
-							<option value='c0'>75%</option>
-							<option value='ff'>100%</option>
-						</select>
+						<label for="opacity" class="col-lg-4">Opacity:</label>
+						<div class="col-lg-8">
+							<select name='opacity' class="form-control"  required>
+								<option value='00'>0%</option>
+								<option value='40' selected='selected'>25%</option>
+								<option value='80'>50%</option>
+								<option value='c0'>75%</option>
+								<option value='ff'>100%</option>
+							</select>
+						</div>
 					</div>
 				</fieldset>
 
-				<div class="form-group col-lg-6">
+				<div class="form-group">
 					<input type="hidden" name="input_type" value="form"/>
 					<input type='submit' name='submit' value='Send' class="btn btn-success">
 				</div>
@@ -186,68 +210,76 @@
 			<p>Use the form below to upload your platepar file and generate a Google Earth-file for your camera setup.</p>
 			
 			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
-				<fieldset class="col-lg-6">
+				<fieldset class="col-lg-6 mb-2em">
 					<legend>Display settings</legend>
 							
 					<div class="form-group">
-						<label for="color">Color:</label>
-						<select name='color' class="form-control" required>
-							<option value='0000FF'>Red</option>
-							<option value='FFFF00'>Cyan</option>
-							<option value='FF0000'>Blue</option>
-							<option value='0A0000'>DarkBlue</option>
-							<option value='6E8DDA'>LightBlue</option>
-							<option value='080008'>Purple</option>
-							<option value='00FFFF'>Yellow</option>
-							<option value='00FF00'>Lime</option>
-							<option value='FF00FF'>Magenta</option>
-							<option value='FFFFFF'>White</option>
-							<option value='0C0C0C'>Silver</option>
-							<option value='080808'>Gray</option>
-							<option value='000000'>Black</option>
-							<option value='005AFF'>Orange</option>
-							<option value='A2A25A'>Brown</option>
-							<option value='000008'>Maroon</option>
-							<option value='000800'>Green</option>
-							<option value='000808'>Olive</option>
-						</select>
+						<label for="color" class="col-lg-4">Color:</label>
+						<div class="col-lg-8">
+							<select name='color' class="form-control" required>
+								<option value='0000FF'>Red</option>
+								<option value='FFFF00'>Cyan</option>
+								<option value='FF0000'>Blue</option>
+								<option value='0A0000'>DarkBlue</option>
+								<option value='6E8DDA'>LightBlue</option>
+								<option value='080008'>Purple</option>
+								<option value='00FFFF'>Yellow</option>
+								<option value='00FF00'>Lime</option>
+								<option value='FF00FF'>Magenta</option>
+								<option value='FFFFFF'>White</option>
+								<option value='0C0C0C'>Silver</option>
+								<option value='080808'>Gray</option>
+								<option value='000000'>Black</option>
+								<option value='005AFF'>Orange</option>
+								<option value='A2A25A'>Brown</option>
+								<option value='000008'>Maroon</option>
+								<option value='000800'>Green</option>
+								<option value='000808'>Olive</option>
+							</select>
+						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="opacity">Opacity:</label>
-						<select name='opacity' class="form-control"  required>
-							<option value='00'>0%</option>
-							<option value='40' selected='selected'>25%</option>
-							<option value='80'>50%</option>
-							<option value='c0'>75%</option>
-							<option value='ff'>100%</option>
-						</select>
+						<label for="opacity" class="col-lg-4">Opacity:</label>
+						<div class="col-lg-8">
+							<select name='opacity' class="form-control"  required>
+								<option value='00'>0%</option>
+								<option value='40' selected='selected'>25%</option>
+								<option value='80'>50%</option>
+								<option value='c0'>75%</option>
+								<option value='ff'>100%</option>
+							</select>
+						</div>
 					</div>
 				</fieldset>
 
 				<fieldset class="col-lg-6">
 					<legend>Details</legend>
 
-					<div class="form-group">
-						<label for="platepar_file">Platepar File</label>
-						<input type='file' name='platepar_file' id="platepar_file" class="form-control">
+					<div class="form-group custom-file">
+						<label for="platepar_file" class="custom-file-label">Platepar File</label>
+						<input type='file' name='platepar_file' id="platepar_file" class="custom-file-input">
 					</div>
 					
 					<div class="form-group">
-						<label for="fov_altitude">Range/Alt. [km]:</label>
-						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
+						<div class="col-lg-8">
+							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
+						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="horizontal_cut">Fixed upper altitude</label>
-						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
-					</div>
-
-					<div class="form-group">
-						<input type="hidden" name="input_type" value="platepar"/>
-						<input type='submit' name='submit' value='Send' class="btn btn-success">
+						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
+						<div class="col-lg-8">
+							<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
+						</div>
 					</div>
 				</fieldset>
+				
+				<div class="form-group text-right">
+					<input type="hidden" name="input_type" value="platepar"/>
+					<input type='submit' name='submit' value='Send' class="btn btn-success">
+				</div>
 			</form>
 		</div>
 
@@ -259,68 +291,76 @@
 			<p>Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.</p>
 			
 			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
-				<fieldset class="col-lg-6">
+				<fieldset class="col-lg-6 mb-2em">
 					<legend>Display settings</legend>
 							
 					<div class="form-group">
-						<label for="color">Color:</label>
-						<select name='color' class="form-control" required>
-							<option value='0000FF'>Red</option>
-							<option value='FFFF00'>Cyan</option>
-							<option value='FF0000'>Blue</option>
-							<option value='0A0000'>DarkBlue</option>
-							<option value='6E8DDA'>LightBlue</option>
-							<option value='080008'>Purple</option>
-							<option value='00FFFF'>Yellow</option>
-							<option value='00FF00'>Lime</option>
-							<option value='FF00FF'>Magenta</option>
-							<option value='FFFFFF'>White</option>
-							<option value='0C0C0C'>Silver</option>
-							<option value='080808'>Gray</option>
-							<option value='000000'>Black</option>
-							<option value='005AFF'>Orange</option>
-							<option value='A2A25A'>Brown</option>
-							<option value='000008'>Maroon</option>
-							<option value='000800'>Green</option>
-							<option value='000808'>Olive</option>
-						</select>
+						<label for="color" class="col-lg-4">Color:</label>
+						<div class="col-lg-8">
+							<select name='color' class="form-control" required>
+								<option value='0000FF'>Red</option>
+								<option value='FFFF00'>Cyan</option>
+								<option value='FF0000'>Blue</option>
+								<option value='0A0000'>DarkBlue</option>
+								<option value='6E8DDA'>LightBlue</option>
+								<option value='080008'>Purple</option>
+								<option value='00FFFF'>Yellow</option>
+								<option value='00FF00'>Lime</option>
+								<option value='FF00FF'>Magenta</option>
+								<option value='FFFFFF'>White</option>
+								<option value='0C0C0C'>Silver</option>
+								<option value='080808'>Gray</option>
+								<option value='000000'>Black</option>
+								<option value='005AFF'>Orange</option>
+								<option value='A2A25A'>Brown</option>
+								<option value='000008'>Maroon</option>
+								<option value='000800'>Green</option>
+								<option value='000808'>Olive</option>
+							</select>
+						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="opacity">Opacity:</label>
-						<select name='opacity' class="form-control"  required>
-							<option value='00'>0%</option>
-							<option value='40' selected='selected'>25%</option>
-							<option value='80'>50%</option>
-							<option value='c0'>75%</option>
-							<option value='ff'>100%</option>
-						</select>
+						<label for="opacity" class="col-lg-4">Opacity:</label>
+						<div class="col-lg-8">
+							<select name='opacity' class="form-control"  required>
+								<option value='00'>0%</option>
+								<option value='40' selected='selected'>25%</option>
+								<option value='80'>50%</option>
+								<option value='c0'>75%</option>
+								<option value='ff'>100%</option>
+							</select>
+						</div>
 					</div>
 				</fieldset>
 
 				<fieldset class="col-lg-6">
 					<legend>Details</legend>
 
-					<div class="form-group">
-						<label for="csv_file">Platepar File</label>
-						<input type='file' name='csv_file' id="csv_file" class="form-control">
+					<div class="form-group custom-file">
+						<label for="csv_file" class="custom-file-label">CSV File</label>
+						<input type='file' name='csv_file' id="csv_file" class="custom-file-input">
 					</div>
 					
 					<div class="form-group">
-						<label for="fov_altitude">Range/Alt. [km]:</label>
-						<input type='text' name='fov_altitude' placeholder="120" class="form-control" value='120' required>
+						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
+						<div class="col-lg-8">
+							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
+						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="horizontal_cut">Fixed upper altitude</label>
-						<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
-					</div>
-
-					<div class="form-group">
-						<input type="hidden" name="input_type" value="csv"/>
-						<input type='submit' name='submit' value='Send' class="btn btn-success">
+						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
+						<div class="col-lg-8">
+							<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
+						</div>
 					</div>
 				</fieldset>
+				
+				<div class="form-group">
+					<input type="hidden" name="input_type" value="csv"/>
+					<input type='submit' name='submit' value='Send' class="btn btn-success">
+				</div>
 			</form>
 		</div>
 

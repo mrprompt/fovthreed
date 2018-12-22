@@ -35,3 +35,14 @@ html {
   code {
     font-size: 80%;
   }
+
+  .mb-2em {
+    margin-bottom: 2em;
+  }
+  .mb-5em {
+    margin-bottom: 5em !important;
+  }
+
+  .form-group {
+    margin-bottom: 1em !important;
+  }
