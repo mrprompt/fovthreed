@@ -365,7 +365,8 @@
 				<h3>Source code</h3>
 
 				FOV3D was written by Geert Barentsen, the source code was downloaded from this <a href="https://www.cosmos.esa.int/web/meteor/fov3d">ESA website</a> 
-				and rewrited to this version by <a href="https://github.com/mrprompt">Thiago Paes</a> to use on <a href="https://globalmeteornetwork.org">GMN</a> website.
+				and rewrited to this version by <a href="https://github.com/mrprompt">Thiago Paes</a> to use on <a href="https://globalmeteornetwork.org">GMN</a> 
+				website, you can get source code in <a href="https://github.com/mrprompt/fovthreed">GitHub</a>.
 			</div>
 		</div>
 	</main>
