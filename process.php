@@ -85,9 +85,7 @@ if (isset($_POST["submit"])) {
                     $fov_altitude = trim($_POST["fov_altitude"]);
                     $horizontal_cut = $_POST["horizontal_cut"];
 
-                    $name = 'FOV3D';
-
-                    $ges = new GoogleEarthStation($fov_altitude, $horizontal_cut, $name);
+                    $ges = new GoogleEarthStation($fov_altitude, $horizontal_cut);
 
                     while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
                         $name = $row[0];
@@ -104,6 +102,9 @@ if (isset($_POST["submit"])) {
                     }
                     
                     fclose($handle);
+
+                    // overwriting name to create download file
+                    $name = 'FOV3D';
                 }
             }
 			break;
