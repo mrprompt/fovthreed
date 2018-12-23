@@ -320,7 +320,7 @@
 					</div>
 				</fieldset>
 
-				<fieldset class="col-lg-6">
+				<fieldset class="col-lg-6 mb-10em">
 					<legend>Details</legend>
 
 					<div class="form-group custom-file">
