@@ -89,12 +89,12 @@ if (isset($_POST["submit"])) {
 
                     $ges = new GoogleEarthStation($fov_altitude, $horizontal_cut, $name);
 
-                    while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
                         $name = $row[0];
                         $color = $row[1];
                         $latitude = $row[2];
                         $longitude = $row[3];
-                        $elev = $row[4];
+                        $altitude = $row[4];
                         
                         $corners = array_slice($row, 5);
 
