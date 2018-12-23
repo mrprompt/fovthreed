@@ -291,45 +291,31 @@
 			<p>Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.</p>
 			
 			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
-				<fieldset class="col-lg-6 mb-2em">
-					<legend>Display settings</legend>
-							
-					<div class="form-group">
-						<label for="color" class="col-lg-4">Color:</label>
-						<div class="col-lg-8">
-							<select name='color' class="form-control" required>
-								<option value='0000FF'>Red</option>
-								<option value='FFFF00'>Cyan</option>
-								<option value='FF0000'>Blue</option>
-								<option value='0A0000'>DarkBlue</option>
-								<option value='6E8DDA'>LightBlue</option>
-								<option value='080008'>Purple</option>
-								<option value='00FFFF'>Yellow</option>
-								<option value='00FF00'>Lime</option>
-								<option value='FF00FF'>Magenta</option>
-								<option value='FFFFFF'>White</option>
-								<option value='0C0C0C'>Silver</option>
-								<option value='080808'>Gray</option>
-								<option value='000000'>Black</option>
-								<option value='005AFF'>Orange</option>
-								<option value='A2A25A'>Brown</option>
-								<option value='000008'>Maroon</option>
-								<option value='000800'>Green</option>
-								<option value='000808'>Olive</option>
-							</select>
-						</div>
-					</div>
+				<fieldset class="col-lg-6">
+					<legend>Field of view (rectangle)</legend>
 
 					<div class="form-group">
-						<label for="opacity" class="col-lg-4">Opacity:</label>
+						<label for="width" class="col-lg-4">Width:</label>
 						<div class="col-lg-8">
-							<select name='opacity' class="form-control"  required>
-								<option value='00'>0%</option>
-								<option value='40' selected='selected'>25%</option>
-								<option value='80'>50%</option>
-								<option value='c0'>75%</option>
-								<option value='ff'>100%</option>
-							</select>
+							<input type='text' name='width' placeholder="[0, 90]" class="form-control" required> 
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="height" class="col-lg-4">Height:</label>
+						<div class="col-lg-8">
+							<input type='text' name='height' placeholder="[0, 180]" class="form-control" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
+						<div class="col-lg-8">
+							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
+						<div class="col-lg-8">	 
+							<input type='checkbox' name='horizontal_cut' checked='checked'>
 						</div>
 					</div>
 				</fieldset>
@@ -341,23 +327,9 @@
 						<label for="csv_file" class="custom-file-label">CSV File</label>
 						<input type='file' name='csv_file' id="csv_file" class="custom-file-input">
 					</div>
-					
-					<div class="form-group">
-						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
-						<div class="col-lg-8">
-							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
-						<div class="col-lg-8">
-							<input type='checkbox' name='horizontal_cut' id="horizontal_cut" checked='checked'>
-						</div>
-					</div>
 				</fieldset>
 				
-				<div class="form-group">
+				<div class="form-group col-lg-12">
 					<input type="hidden" name="input_type" value="csv"/>
 					<input type='submit' name='submit' value='Send' class="btn btn-success">
 				</div>
