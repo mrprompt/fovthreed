@@ -80,6 +80,13 @@ if (isset($_POST["submit"])) {
                 $row = 0;
 
                 if (($handle = fopen($_FILES['csv_file']['tmp_name'], "r")) !== FALSE) {
+                    $height = trim($_POST['height']);
+                    $width = trim($_POST['width']);
+                    $fov_altitude = trim($_POST["fov_altitude"]);
+                    $horizontal_cut = $_POST["horizontal_cut"];
+
+                    $name = 'FOV3D';
+
                     $ges = new GoogleEarthStation($fov_altitude, $horizontal_cut, $name);
 
                     while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -87,15 +94,9 @@ if (isset($_POST["submit"])) {
                         $color = $row[1];
                         $latitude = $row[2];
                         $longitude = $row[3];
-                        $altitude = $row[4];
-                        $azim = $row[5];
-                        $elev = $row[6];
-                        $height = trim($_POST['height']);
-                        $width = trim($_POST['width']);
-                        $fov_altitude = trim($_POST["fov_altitude"]);
-                        $horizontal_cut = $_POST["horizontal_cut"];
-
-                        $corners = array_slice($row, 7);
+                        $elev = $row[4];
+                        
+                        $corners = array_slice($row, 5);
 
                         $ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
 
