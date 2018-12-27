@@ -133,7 +133,11 @@ if (isset($_POST["submit"])) {
                 }
             }
 			break;
-    }
+	}
+	
+	if (empty($name)) {
+		$name = 'FOV3D';
+	}
 
     // Let the browser know that this is a special application file (KML)
     header('Content-Type: application/vnd.google-earth.kml+xml');
