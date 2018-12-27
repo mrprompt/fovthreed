@@ -39,8 +39,17 @@ html {
   .mb-2em {
     margin-bottom: 2em;
   }
+  .mb-3em {
+    margin-bottom: 3em !important;
+  }
+  .mb-4em {
+    margin-bottom: 4em !important;
+  }
   .mb-5em {
     margin-bottom: 5em !important;
+  }
+  .mb-6em {
+    margin-bottom: 6em !important;
   }
   .mb-10em {
     margin-bottom: 9em !important;

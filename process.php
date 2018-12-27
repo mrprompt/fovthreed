@@ -77,11 +77,30 @@ if (isset($_POST["submit"])) {
 
         case 'csv':
             if (isset($_FILES['csv_file']) && file_exists($_FILES['csv_file']['tmp_name'])) {
-                $row = 0;
+				$colors = [
+					'0000FF',
+					'FFFF00',
+					'FF0000',
+					'0A0000',
+					'6E8DDA',
+					'080008',
+					'00FFFF',
+					'00FF00',
+					'FF00FF',
+					'FFFFFF',
+					'0C0C0C',
+					'080808',
+					'000000',
+					'005AFF',
+					'A2A25A',
+					'000008',
+					'000800',
+					'000808',
+				];
+
+				$row = 0;
 
                 if (($handle = fopen($_FILES['csv_file']['tmp_name'], "r")) !== FALSE) {
-                    $height = trim($_POST['height']);
-                    $width = trim($_POST['width']);
                     $fov_altitude = trim($_POST["fov_altitude"]);
                     $horizontal_cut = $_POST["horizontal_cut"];
 
@@ -89,12 +108,18 @@ if (isset($_POST["submit"])) {
 
                     while (($row = fgetcsv($handle, 0, ",")) !== FALSE) {
                         $name = $row[0];
-                        $color = $row[1];
+                        $color = trim($_POST["opacity"]) . $row[1];
                         $latitude = $row[2];
                         $longitude = $row[3];
-                        $altitude = $row[4];
-                        
-                        $corners = array_slice($row, 5);
+						$altitude = $row[4];
+						$height = $row[6];
+						$width = $row[5];
+
+						if ($row[1] == '-1') {
+							$color = trim($_POST["opacity"]) . $colors[ array_rand($colors, 1) ];
+						}
+
+                        $corners = array_slice($row, 7);
 
                         $ges->addPlacemark($name, $latitude, $longitude, $altitude, $corners, $color);
 

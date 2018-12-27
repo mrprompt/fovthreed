@@ -295,18 +295,6 @@
 					<legend>Field of view (rectangle)</legend>
 
 					<div class="form-group">
-						<label for="width" class="col-lg-4">Width:</label>
-						<div class="col-lg-8">
-							<input type='text' name='width' placeholder="[0, 90]" class="form-control" required> 
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="height" class="col-lg-4">Height:</label>
-						<div class="col-lg-8">
-							<input type='text' name='height' placeholder="[0, 180]" class="form-control" required>
-						</div>
-					</div>
-					<div class="form-group">
 						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
 						<div class="col-lg-8">
 							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
@@ -318,9 +306,22 @@
 							<input type='checkbox' name='horizontal_cut' checked='checked'>
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label for="opacity" class="col-lg-4">Opacity:</label>
+						<div class="col-lg-8">
+							<select name='opacity' class="form-control"  required>
+								<option value='00'>0%</option>
+								<option value='40' selected='selected'>25%</option>
+								<option value='80'>50%</option>
+								<option value='c0'>75%</option>
+								<option value='ff'>100%</option>
+							</select>
+						</div>
+					</div>
 				</fieldset>
 
-				<fieldset class="col-lg-6 mb-10em">
+				<fieldset class="col-lg-6 mb-6em">
 					<legend>Details</legend>
 
 					<div class="form-group custom-file">
