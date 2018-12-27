@@ -291,21 +291,8 @@
 			<p>Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.</p>
 			
 			<form action="process.php" method="post" enctype="multipart/form-data" role="form" class="form-inline">
-				<fieldset class="col-lg-6">
-					<legend>Field of view (rectangle)</legend>
-
-					<div class="form-group">
-						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
-						<div class="col-lg-8">
-							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
-						<div class="col-lg-8">	 
-							<input type='checkbox' name='horizontal_cut' checked='checked'>
-						</div>
-					</div>
+				<fieldset class="col-lg-6 mb-6em">
+					<legend>Display settings</legend>
 
 					<div class="form-group">
 						<label for="opacity" class="col-lg-4">Opacity:</label>
@@ -321,12 +308,25 @@
 					</div>
 				</fieldset>
 
-				<fieldset class="col-lg-6 mb-6em">
+				<fieldset class="col-lg-6">
 					<legend>Details</legend>
 
 					<div class="form-group custom-file">
 						<label for="csv_file" class="custom-file-label">CSV File</label>
 						<input type='file' name='csv_file' id="csv_file" class="custom-file-input">
+					</div>
+
+					<div class="form-group">
+						<label for="fov_altitude" class="col-lg-4">Range/Alt.:</label>
+						<div class="col-lg-8">
+							<input type='text' name='fov_altitude' placeholder="[km]" class="form-control" value='120' required>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="horizontal_cut" class="col-lg-4">Fixed upper altitude</label>
+						<div class="col-lg-8">	 
+							<input type='checkbox' name='horizontal_cut' checked='checked'>
+						</div>
 					</div>
 				</fieldset>
 				
