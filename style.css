@@ -34,6 +34,8 @@ html {
   
   code {
     font-size: 80%;
+    max-width: 99% !important; 
+    word-break: break-work !important;
   }
 
   .mb-2em {

@@ -293,12 +293,18 @@
 		<div class="row-fluid" id="csv">
 			<h3>Upload CSV</h3>
 
-			<p>Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.</p>
+			<p>
+				Use the form below to upload your csv file and generate a Google Earth-file for your camera setup.
+			</p>
 			<p>
 				Every row of the CSV file contains an entry for one station, the columns are the following:<br>
 				Station name, Hex color (-1 for random), Latitude (+N, deg), Longitude (+E, deg), Elevation (m), Azimuth 1, Altitude 1, Azimuth 2, Altitude 2, ...
 			</p>
-			<p>The field of view of every station is bound by rays of azimuth and altitude emanating from the position of the station. The rays are given by Azimuth 1, Altitude 1, Azimuth 2, Altitude 2, etc. entries. There is no limit on the number of rays. The CSV file should be without a header.</p>
+			<p>
+				The field of view of every station is bound by rays of azimuth and altitude emanating from the position of the station. 
+				The rays are given by Azimuth 1, Altitude 1, Azimuth 2, Altitude 2, etc. entries. 
+				There is no limit on the number of rays. The CSV file should be without a header.
+			</p>
 			<p>
 				Here is an example of entries for two stations in Croatia:<br>
 				<code>
