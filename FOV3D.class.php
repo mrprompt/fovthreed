@@ -85,7 +85,7 @@ class GoogleEarthStation
         // Create a description for the KML file (to document the contents)
         $description = '';
         $description .= "Range: ".$this->cut_range." km\n";
-        $description .= "FOV (az,alt,az,alt ...): (".implode($corner_array, ", ").")\n";
+        $description .= "FOV (az,alt,az,alt ...): (".implode(', ', $corner_array).")\n";
         $description .=	"Longitude: ". $station_longitude." deg\n";
         $description .=	"Latitude: ".$station_latitude." deg\n";
         $description .=	"Altitude: ".$station_height." m\n\n";
